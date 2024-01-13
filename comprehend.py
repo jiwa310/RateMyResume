@@ -22,7 +22,7 @@ pdf_text = """
 
             Childcare Experience
 
-            • Coordinated service assignments for 20 part -time counselors and 100 client families. 
+            • Coordinated service assignments for 20 part-time counselors and 100 client families. 
             • Oversaw daily activity and outing planning for 100 clients.
             • Assisted families of special needs clients with researching financial assistance and 
             healthcare. 
@@ -30,9 +30,9 @@ pdf_text = """
             • Oversaw daily and special st udent activities.
 
             Employment History
-            1999-2002  Counseling Supervisor, The Wesley Ce nter, Little Rock, Arkansas.
-            1997-1999  Client Specialist, Rainbow Special Ca re Center, Little Rock, Arkansas
-            1996-1997 Teacher’s Assistant, Cowell Elem entary, Conway, Arkansas
+            1999-2002  Counseling Supervisor, The Wesley Center, Little Rock, Arkansas.
+            1997-1999  Client Specialist, Rainbow Special Care Center, Little Rock, Arkansas
+            1996-1997 Teacher’s Assistant, Cowell Elementary, Conway, Arkansas
 
             Education 
 
@@ -40,7 +40,7 @@ pdf_text = """
 
             • BS in Early Childhood Development (1999) 
             • BA in Elementary Education (1998) 
-            • GPA (4.0 Scale):  Early Childhood Developm ent – 3.8, Elementary Education – 3.5, 
+            • GPA (4.0 Scale):  Early Childhood Development – 3.8, Elementary Education – 3.5, 
             Overall 3.4.
             • Dean’s List, Chancellor’s List
             """
@@ -56,10 +56,10 @@ pii_words = []
 for entry in pii_output["Entities"]:
     type = entry["Type"]
     if (type == "NAME" or type == "ADDRESS" or type == "EMAIL" or type == "PHONE" or type == "AGE"):
+        score = entry["Score"]
         start = entry["BeginOffset"]
         end =   entry["EndOffset"]
         word =  pdf_text[start:end]
         pii_words.append(word)
+        print(str(score) + ' ' + word + ' ' + type)
 
-for word in pii_words:
-    print(word)
