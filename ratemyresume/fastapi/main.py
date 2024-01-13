@@ -1,6 +1,9 @@
 import PyPDF2
 import os 
+import base64
+import gridfs
 
+from pymongo import MongoClient
 from typing import Union, Optional
 from uuid import UUID
 from fastapi import FastAPI, Depends, UploadFile, File, HTTPException
@@ -45,14 +48,34 @@ async def read_root():
 
 @app.post("/upload")
 async def upload_file(file: UploadFile = File(...)):
+    print("i love women")
     global num_pages
     contents = await file.read()
     reader = PyPDF2.PdfReader(BytesIO(contents))
 
     # Store the number of pages in the global variable
     num_pages = len(reader.pages)
+    text = await write_new_pdf(file)
+    print(text)
 
     return {"filename": file.filename, "num_pages": num_pages}
+
+async def write_new_pdf(path):
+    db = MongoClient('mongodb://localhost:27017/').myDB
+    fs = gridfs.GridFS(db)
+    print("I love men")
+    # Note, open with the "rb" flag for "read bytes"
+    with open(path, "rb") as pdf:
+        encoded_string = base64.b64encode(pdf.read())
+        return encoded_string
+    # with fs.new_file(
+    #     chunkSize=800000,
+    #     filename=path) as fp:
+    #     fp.write(encoded_string)
+
+
+
+
 
 @app.post("/create-item")
 async def create_item(item: Item):
