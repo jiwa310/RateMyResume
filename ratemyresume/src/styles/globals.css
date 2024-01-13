@@ -1,0 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-primary: 'League Spartan', sans-serif;
+  --color-background: #1a202c;
+  --color-text-light: #f5f5f5;
+  --color-text-dark: #a0aec0; /* This is a dark grey color */
+  --color-text-title: #edf2f7; /* This is a light grey color, almost white */
+  --spacing-small: 8px;
+  --spacing-medium: 16px;
+  --spacing-large: 24px;
+}
+
+body {
+  font-family: var(--font-primary);
+  margin: 0;
+  padding: 0;
+  background-color: var(--color-background);
+  color: var(--color-text-dark);
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 100%;
+}
