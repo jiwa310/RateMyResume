@@ -1,0 +1,8 @@
+.DS_Store
+/node_modules/
+
+#javascript approach to calling amazon api
+index.js
+package-lock.json
+package.json
+config.json
