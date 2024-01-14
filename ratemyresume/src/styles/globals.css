@@ -28,3 +28,23 @@ body {
   justify-content: center;
   min-width: 100%;
 }
+
+html {
+  scrollbar-width: auto; /* "auto" or "thin"  */
+  scrollbar-color: var(--color-text-dark) var(--color-background); /* scroll thumb and track */
+}
+
+/* For Webkit browsers like Chrome and Safari */
+html::-webkit-scrollbar {
+  width: 12px; /* width of the entire scrollbar */
+}
+
+html::-webkit-scrollbar-track {
+  background: var(--color-background); /* color of the tracking area */
+}
+
+html::-webkit-scrollbar-thumb {
+  background-color: var(--color-text-dark); /* color of the scroll thumb */
+  border-radius: 20px; /* roundness of the scroll thumb */
+  border: 3px solid var(--color-background); /* creates padding around scroll thumb */
+}

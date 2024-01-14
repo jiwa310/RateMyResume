@@ -22,6 +22,18 @@ const options = [
   { value: 'hot', label: 'Hot' },
 ];
 
+const customStyles = {
+    option: (provided, state) => ({
+      ...provided,
+      color: state.isSelected ? 'white' : 'black',
+      backgroundColor: state.isSelected ? 'black' : 'white',
+    }),
+    control: (provided) => ({
+      ...provided,
+      color: 'black',
+    }),
+  };
+
 export default function Explore() {
   const [hoverIndex, setHoverIndex] = useState(null);
   const [selectedOption, setSelectedOption] = useState(null);
@@ -34,10 +46,11 @@ export default function Explore() {
 
   return (
     <div className="min-h-screen p-10">
-      <h1 className="text-cyan-300 text-5xl md:text-3xl font-bold mb-4">Find Your Inspiration.</h1>
+      <h1 className="text-cyan-300 text-center text-3xl md:text-5xl font-bold mb-4">Find Your Inspiration.</h1>
       <div className="flex justify-between mb-4">
         <Select 
           options={options} 
+          styles={customStyles}
           value={selectedOption} 
           onChange={handleSelectChange} 
         />
@@ -53,11 +66,12 @@ export default function Explore() {
         {pdfFiles.map((pdfFile, index) => (
           <div 
             key={index} 
-            className={`w-full h-full ${hoverIndex === index ? 'bg-blue-200' : ''}`}
+            className={`w-full h-full relative ${hoverIndex === index ? 'bg-cyan-200' : ''}`}
             onMouseEnter={() => setHoverIndex(index)}
             onMouseLeave={() => setHoverIndex(null)}
             onClick={() => window.open(pdfFile)}
           >
+            <div className="absolute inset-0 z-10 bg-cyan-500 opacity-0 hover:opacity-25 transition-opacity duration-200"></div>
             <Document file={pdfFile}>
               <Page pageNumber={1} width={250} renderTextLayer={false} renderAnnotationLayer={false} />
             </Document>
