@@ -9,7 +9,7 @@ export default function WelcomePage() {
     const data = new FormData();
     data.append('file', file);
 
-    const response = await fetch('/api/upload', {
+    const response = await fetch('/fastapi/upload', {
       method: 'POST',
       body: data,
     });

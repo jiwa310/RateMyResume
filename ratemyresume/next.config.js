@@ -7,7 +7,7 @@ module.exports = {
   async rewrites() {
     return [
       {
-        source: '/api/:path*',
+        source: '/fastapi/:path*',
         destination: 'http://localhost:8000/:path*', // Proxy to FastAPI
       },
     ]
