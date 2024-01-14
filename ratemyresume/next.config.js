@@ -8,7 +8,7 @@ module.exports = {
     return [
       {
         source: '/fastapi/:path*',
-        destination: 'http://localhost:8000/:path*', // Proxy to FastAPI
+        destination: 'https://fastapi-green.vercel.app/:path*', // Proxy to FastAPI
       },
     ]
   },
