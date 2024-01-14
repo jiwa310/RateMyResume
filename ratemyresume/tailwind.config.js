@@ -11,7 +11,7 @@ module.exports = {
     },
     extend: {
       fontFamily: {
-        'league-spartan': ['var(--font-league-spartan)', 'sans-serif'],
+        'montserrat': ['var(--font-montserrat)', 'sans-serif'],
       },
       fontSize: {
         'name': '4rem', // Very large for your name on the front page

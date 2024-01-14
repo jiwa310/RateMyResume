@@ -2,6 +2,7 @@ import { pdfjs } from 'react-pdf';
 import { Document, Page } from 'react-pdf';
 import { useState } from 'react';
 import Select from 'react-select';
+import Link from 'next/link';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
@@ -63,19 +64,19 @@ export default function Explore() {
         />
       </div>
       <div className="grid grid-cols-4 gap-4">
-        {pdfFiles.map((pdfFile, index) => (
-          <div 
-            key={index} 
+      {pdfFiles.map((pdfFile, index) => (
+        <Link key={index} href={`/pdfView?file=${encodeURIComponent(pdfFile)}`}>
+            <div 
             className={`w-full h-full relative ${hoverIndex === index ? 'bg-cyan-200' : ''}`}
             onMouseEnter={() => setHoverIndex(index)}
             onMouseLeave={() => setHoverIndex(null)}
-            onClick={() => window.open(pdfFile)}
-          >
+            >
             <div className="absolute inset-0 z-10 bg-cyan-500 opacity-0 hover:opacity-25 transition-opacity duration-200"></div>
             <Document file={pdfFile}>
-              <Page pageNumber={1} width={250} renderTextLayer={false} renderAnnotationLayer={false} />
+                <Page pageNumber={1} width={250} renderTextLayer={false} renderAnnotationLayer={false} />
             </Document>
-          </div>
+            </div>
+        </Link>
         ))}
       </div>
     </div>
