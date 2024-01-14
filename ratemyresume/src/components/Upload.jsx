@@ -20,7 +20,7 @@ export default function WelcomePage() {
   };
 
   return (
-    <div className="min-h-screen text-center pt-10 md:pt-5 pl-10 md:pl-20 pr-10 md:pr-20">
+    <div className="min-h-screen text-center pt-10 md:pt-10 pl-10 md:pl-20 pr-10 md:pr-20">
         <h1 className="text-cyan-300 text-xl md:text-5xl font-bold mb-4">Contribute Your Resume. Get Feedback.</h1>
         <div className="flex flex-col items-center justify-center border-2 border-dashed border-cyan-300 p-10 mt-8 rounded-md">
             <label htmlFor="file-upload" className="flex flex-col items-center px-2 py-1 bg-cyan-300 text-blue-900 rounded-lg shadow-lg tracking-wide uppercase border border-blue cursor-pointer hover:bg-cyan-400 hover:text-blue-900">
