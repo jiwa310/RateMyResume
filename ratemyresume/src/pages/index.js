@@ -8,6 +8,19 @@ export default function Home() {
   const exploreRef = React.createRef();
   const uploadRef = React.createRef();
 
+  useEffect(() => {
+    const hash = window.location.hash;
+    let offset = -75; 
+    if (hash === '#explore') {
+      const top = exploreRef.current.getBoundingClientRect().top + window.pageYOffset + offset;
+      window.scrollTo({ top: top, behavior: 'smooth' });
+    } else if (hash === '#upload') {
+      const top = uploadRef.current.getBoundingClientRect().top + window.pageYOffset + offset;
+      window.scrollTo({ top: top, behavior: 'smooth' });
+    }
+    history.replaceState(null, null, ' ');
+  }, []);
+
   const scrollToSection = (section) => {
     let offset = -75;
     switch(section) {
