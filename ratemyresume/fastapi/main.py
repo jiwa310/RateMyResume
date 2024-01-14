@@ -2,6 +2,8 @@ import PyPDF2
 import os 
 import base64
 import gridfs
+import pymongo 
+import motor 
 
 from pymongo import MongoClient
 from typing import Union, Optional
@@ -12,6 +14,8 @@ from pydantic import BaseModel
 from dotenv import load_dotenv
 from io import BytesIO
 
+from comprehend import get_pii_words
+
 load_dotenv()
 
 mongodb_uri = os.getenv("URI")
@@ -20,10 +24,12 @@ database_name = os.getenv("NAME")
 app = FastAPI()
 
 class Item(BaseModel):
-    id: Optional[UUID] = int
+    id: Optional[UUID] = None
     major_tag: str
     description: str
     likes: int
+    pdf_file: bytes  # Add this field to accept bytes for the PDF
+
     
 
 # Replace with your MongoDB URI and database name
@@ -40,6 +46,7 @@ num_pages = None
 
 @app.get("/")
 async def read_root():
+    print("READ ROOT")
     # Check if a PDF has been uploaded
     if num_pages is not None:
         return {"Number of pages in last uploaded PDF": num_pages}
@@ -55,30 +62,53 @@ async def upload_file(file: UploadFile = File(...)):
 
     # Store the number of pages in the global variable
     num_pages = len(reader.pages)
-    text = await write_new_pdf(file)
-    print(text)
+    text = await write_new_pdf(file)  # Await the coroutine here
+    print(type(text))
+
+
+    # call post with Item...
+    item = Item(
+        major_tag="HAII",
+        description="BYEEE",
+        likes=137,
+        pdf_file=text  # Store the PDF content in the pdf_file field
+    )
+
+    # Call the /create-item endpoint to insert the item into MongoDB
+    result = await create_item(item)
 
     return {"filename": file.filename, "num_pages": num_pages}
 
-async def write_new_pdf(path):
+
+async def write_new_pdf(file):
     db = MongoClient('mongodb://localhost:27017/').myDB
     fs = gridfs.GridFS(db)
-    print("I love men")
-    # Note, open with the "rb" flag for "read bytes"
-    with open(path, "rb") as pdf:
-        encoded_string = base64.b64encode(pdf.read())
-        return encoded_string
-    # with fs.new_file(
-    #     chunkSize=800000,
-    #     filename=path) as fp:
-    #     fp.write(encoded_string)
+    print("I love men!!")
+
+    # Ensure the file position is at the beginning
+    file.file.seek(0)
+
+    # Read the file content and encode it to base64
+    encoded_string = base64.b64encode(file.file.read())
+
+    return encoded_string
 
 
+@app.get("/get-all")
+async def get_all_items():
+    collection = db["items"]
+    items = await collection.find().to_list(length=None)
 
+    # Convert ObjectId to string
+    for item in items:
+        item["_id"] = str(item["_id"])
+
+    return items
 
 
 @app.post("/create-item")
 async def create_item(item: Item):
+    print("Create-item has been called!")
     # Example: Insert item details into MongoDB
     collection = db["items"]  # Replace "items" with your actual collection name
     result = await collection.insert_one(item.dict())
