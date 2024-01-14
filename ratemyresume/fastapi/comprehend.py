@@ -32,15 +32,12 @@ def get_pii_words(pdfText):
     return pii_words
 
 def edit_pdf(pdf_bytes, pii_words):
-    with open('output.pdf', 'wb') as f:
-        f.write(pdf_bytes)
-
-    pdf_stream = fitz.open("pdf", pdf_bytes)  # Open the PDF from bytes
+    # Open the PDF from bytes
+    pdf_stream = fitz.open("pdf", pdf_bytes)
 
     for page_number in range(len(pdf_stream)):
         page = pdf_stream[page_number]
 
-        # Iterate through PII words
         for pii_word in pii_words:
             # Search for the PII word on the page
             instances = page.search_for(pii_word)
@@ -48,7 +45,7 @@ def edit_pdf(pdf_bytes, pii_words):
             # Redact each instance with a black rectangle
             for instance in instances:
                 rect = fitz.Rect(instance)
-                rc = page.add_redact_annot(rect, fill=(0,0,0))
+                rc = page.add_redact_annot(rect, fill=(0, 0, 0))
                 page.apply_redactions()
 
     # Save the redacted PDF to a new bytes object
@@ -56,6 +53,32 @@ def edit_pdf(pdf_bytes, pii_words):
     pdf_stream.close()
 
     return redacted_pdf_bytes
+
+# def edit_pdf(pdf_bytes, pii_words):
+#     with open('output.pdf', 'wb') as f:
+#         f.write(pdf_bytes)
+
+#     pdf_stream = fitz.open("pdf", pdf_bytes)  # Open the PDF from bytes
+
+#     for page_number in range(len(pdf_stream)):
+#         page = pdf_stream[page_number]
+
+#         # Iterate through PII words
+#         for pii_word in pii_words:
+#             # Search for the PII word on the page
+#             instances = page.search_for(pii_word)
+
+#             # Redact each instance with a black rectangle
+#             for instance in instances:
+#                 rect = fitz.Rect(instance)
+#                 rc = page.add_redact_annot(rect, fill=(0,0,0))
+#                 page.apply_redactions()
+
+#     # Save the redacted PDF to a new bytes object
+#     redacted_pdf_bytes = pdf_stream.write()
+#     pdf_stream.close()
+
+#     return redacted_pdf_bytes
 
 
 if __name__ == "__main__":

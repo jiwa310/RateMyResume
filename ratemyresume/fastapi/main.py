@@ -55,15 +55,15 @@ async def read_root():
 @app.post("/upload")
 async def upload_file(file: UploadFile = File(...)):
     global num_pages
-    contents = await file.read()
-    file_stream = BytesIO(contents)
-    text_reader = PyPDF2.PdfReader(file_stream) 
-
+    text_reader = PyPDF2.PdfReader(file.file)
     pdf_text = text_reader.pages[0].extract_text()
+    print(pdf_text)
+    
     pdf_bytes = await write_new_pdf(file)  # Await the coroutine here
-    num_pages = len(text_reader.pages)
+    # num_pages = len(text_reader.pages)
 
     pii_words = get_pii_words(pdf_text)
+    # print("The list of sensitive words:")
     for word in pii_words:
         print(word)
 
