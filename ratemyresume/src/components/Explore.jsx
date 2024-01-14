@@ -13,6 +13,7 @@ const pdfFiles = [
   "test4.pdf",
   "test5.pdf",
   "test6.pdf",
+  "test7.pdf",
   // add more pdf urls
 ];
 
