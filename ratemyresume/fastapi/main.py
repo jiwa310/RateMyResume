@@ -14,6 +14,7 @@ from pydantic import BaseModel
 from dotenv import load_dotenv
 from io import BytesIO
 from bson import ObjectId 
+from base64 import b64decode
 
 from comprehend import get_pii_words
 
@@ -135,10 +136,29 @@ async def read_item(item_id: str):
     if item:
         # Convert ObjectId to string for proper serialization
         item["_id"] = str(item["_id"])
+        extract_pdf(item["pdf_file"])
         return item
     else:
         return {"message": "Item not found"}
-    
+
+def extract_pdf(pdf_file_base64):
+    print("Extract PDF is working!!")
+    # Decode the Base64 string, making sure that it contains only valid characters
+    bytes = b64decode(pdf_file_base64, validate=True)
+
+    # Perform a basic validation to make sure that the result is a valid PDF file
+    # Be aware! The magic number (file signature) is not 100% reliable solution to validate PDF files
+    # Moreover, if you get Base64 from an untrusted source, you must sanitize the PDF contents
+    if bytes[0:4] != b'%PDF':
+        raise ValueError('Missing the PDF file signature')
+
+    # Write the PDF contents to a local file
+    f = open('a NEW PDF.pdf', 'wb')
+    f.write(bytes)
+    f.close()
+
+
+
 # @app.get("/items/{item_id}")
 # async def read_item(item_id: int, q: Union[str, None] = None):
 #     # Example: Fetch item details from MongoDB based on item_id
