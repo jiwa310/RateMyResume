@@ -7,18 +7,18 @@ export default function PdfPost() {
     const router = useRouter();
     const { file } = router.query;
 
-    const handlePostClick = async () => {
-        //find a way to get the corresponding redacted bytes
-        const response_all = await fetch('/api/get-all', {
-            method: 'POST',
-            body:
-        });
+    // const handlePostClick = async () => {
+    //     //find a way to get the corresponding redacted bytes
+    //     const response_all = await fetch('/api/get-all', {
+    //         method: 'POST',
+    //         body:
+    //     });
 
-        const response = await fetch('/api/create-item', {
-            method: 'POST',
-            body: redacted_bytes,
-        });
-    };
+    //     const response = await fetch('/api/create-item', {
+    //         method: 'POST',
+    //         body: redacted_bytes,
+    //     });
+    // };
 
     return (
         <div className={`container font-montserrat transition-opacity duration-1000 `}>
@@ -31,7 +31,7 @@ export default function PdfPost() {
                 Edit
             </button>
             <button 
-                onClick={handlePostClick}
+                // onClick={handlePostClick}
                 className="border-2 border-cyan-400 text-cyan-400 py-2 px-4 font-bold hover:bg-cyan-400 hover:text-black transition duration-200"
             >
                 Post

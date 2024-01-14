@@ -1,14 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/router';
+
 
 export default function WelcomePage() {
   const router = useRouter();
-
+  const [selecedFile, setSelectedFile] = useState(null)
+  
   const handleFileChange = async (event) => {
     const file = event.target.files[0];
     const data = new FormData();
     data.append('file', file);
-
+    
     const response = await fetch('/api/upload', {
       method: 'POST',
       body: data,

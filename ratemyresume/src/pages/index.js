@@ -3,6 +3,7 @@ import Welcome from '../components/Welcome'
 import Header from '../components/Header'
 import Explore from '../components/Explore'
 import Upload from '../components/Upload'
+// import { connectToDatabase } from '../utils/mongodb'
 
 export default function Home() {
   const exploreRef = React.createRef();
@@ -38,7 +39,6 @@ export default function Home() {
         break;
     }
   }
-  
 
   const [loading, setLoading] = useState(false);
     return (
@@ -50,4 +50,3 @@ export default function Home() {
       </div>
     )
 }
-

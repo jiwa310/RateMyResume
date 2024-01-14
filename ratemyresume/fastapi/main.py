@@ -1,11 +1,12 @@
 import PyPDF2
 import os 
+import io
 import base64
 import gridfs
 import pymongo 
 import motor 
 import bson
-from fastapi.responses import Response
+from fastapi.responses import Response, StreamingResponse
 
 from pymongo import MongoClient
 from typing import Union, Optional
@@ -14,7 +15,6 @@ from fastapi import FastAPI, Depends, UploadFile, File, HTTPException
 from motor.motor_asyncio import AsyncIOMotorClient
 from pydantic import BaseModel
 from dotenv import load_dotenv
-from io import BytesIO
 from bson import ObjectId 
 from base64 import b64decode
 
@@ -29,11 +29,6 @@ app = FastAPI()
 
 class Item(BaseModel):
     pdf_file: bytes  # Add this field to accept bytes for the PDF
-    
-
-# Replace with your MongoDB URI and database name
-mongodb_uri = mongodb_uri
-database_name = database_name
 
 # Create MongoDB client
 client = AsyncIOMotorClient(mongodb_uri)
@@ -74,7 +69,6 @@ async def upload_file(file: UploadFile = File(...)):
     # Return the redacted PDF bytes as a response
     return Response(content=redacted_pdf_bytes, media_type='application/pdf')
 
-
 async def write_new_pdf(file):
     # Ensure the file position is at the beginning
     file.file.seek(0)
@@ -98,6 +92,11 @@ async def create_item(redacted_bytes: bytes):
     else:
         raise HTTPException(status_code=500, detail="Failed to create item")
 
+@app.get("/item/{item_id}")
+async def get_pdf(item_id: str):
+    pdf_data = db.pdf_collection.find_one({"_id": ObjectId(item_id)})
+    pdf_bytes = pdf_data.get("data")
+    return StreamingResponse(io.BytesIO(pdf_bytes), media_type="application/pdf")
 
 # @app.get("/get-all")
 # async def get_all_items():
