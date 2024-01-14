@@ -3,6 +3,31 @@ import Welcome from '../components/Welcome'
 import Header from '../components/Header'
 import Explore from '../components/Explore'
 import Upload from '../components/Upload'
+// https://firebase.google.com/docs/web/setup#available-libraries
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+import { getStorage, ref } from "firebase/storage";
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyBPht2FSlyZAAtkbK9BKi9-tEDrvn-Vis4",
+  authDomain: "ratemyresume-sbhacks.firebaseapp.com",
+  projectId: "ratemyresume-sbhacks",
+  storageBucket: "ratemyresume-sbhacks.appspot.com",
+  messagingSenderId: "607688078150",
+  appId: "1:607688078150:web:167acd763c12c3091b6b47",
+  measurementId: "G-DSK4JES502",
+  storageBucket: "gs://ratemyresume-sbhacks.appspot.com"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+// Get a reference to the storage service, which is used to create references in your storage bucket
+const storage = getStorage();
+// Create a storage reference from our storage service
+const storageRef = ref(storage);
 
 export default function Home() {
   const exploreRef = React.createRef();
