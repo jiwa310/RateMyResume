@@ -5,6 +5,7 @@ import base64
 import gridfs
 import pymongo 
 import motor 
+import tempfile
 
 from pymongo import MongoClient
 from typing import Union, Optional
@@ -15,7 +16,7 @@ from pydantic import BaseModel
 from dotenv import load_dotenv
 from io import BytesIO
 
-from comprehend import get_pii_words
+from comprehend import get_pii_words, edit_pdf
 
 load_dotenv()
 
@@ -25,7 +26,7 @@ database_name = os.getenv("NAME")
 app = FastAPI()
 
 class Item(BaseModel):
-    id: Optional[UUID] = None
+    id: Optional[UUID] = int
     major_tag: str
     description: str
     likes: int
@@ -55,35 +56,84 @@ async def read_root():
     else:
         return {"message": "No PDF uploaded yet"}
 
+# @app.post("/upload")
+# async def upload_file(file: UploadFile = File(...)):
+#     print("Uploading file...")
+#     global num_pages
+#     contents = await file.read()
+#     byte_reader = PyPDF2.PdfReader(BytesIO(contents))
+#     text_reader = PyPDF2.PdfReader(contents)
+
+#     pdf_text = text_reader.pages[0]
+#     pdf_bytes = await write_new_pdf(file)  # Await the coroutine here
+#     num_pages = len(byte_reader.pages)
+
+#     pii_words = get_pii_words(pdf_text)
+
+#     edit_pdf(path, pii_words)
+
+
+#     # call post with Item...
+#     item = Item(
+#         major_tag="HAII",
+#         description="BYEEE",
+#         likes=137,
+#         pdf_file=pdf_bytes  # Store the PDF content in the pdf_file field
+#     )
+
+#     # Call the /create-item endpoint to insert the item into MongoDB
+#     await create_item(item)
+
+#     return {"filename": file.filename, "num_pages": num_pages}
+
+
+
 @app.post("/upload")
 async def upload_file(file: UploadFile = File(...)):
-    print("Uploading file...")
-    global num_pages
-    contents = await file.read()
-    byte_reader = PyPDF2.PdfReader(BytesIO(contents))
-    text_reader = PyPDF2.PDFReader(contents)
+    try:
+        print("Uploading file...")
 
-    pdf_text = text_reader.pages[0]
-    pdf_bytes = await write_new_pdf(file)  # Await the coroutine here
-    num_pages = len(byte_reader.pages)
+        # Create a temporary file
+        temp_file = tempfile.NamedTemporaryFile(delete=False)
+        pii_words = get_pii_words(pdf_actual_text)
 
-    pii_words = get_pii_words(pdf_text)
-    
-    # print(type(pdf_bytes))
-    # print(pdf_text.extract.text())
+        # Save the uploaded file to the temporary file
+        data = await file.read()
+        temp_file.write(data)
+        temp_file.close()
+        print(temp_file.extract_text())
 
-    # call post with Item...
-    item = Item(
-        major_tag="HAII",
-        description="BYEEE",
-        likes=137,
-        pdf_file=pdf_bytes  # Store the PDF content in the pdf_file field
-    )
+        # Open the temporary file with PyMuPDF
+        edit_pdf(temp_file.name, pii_words)
 
-    # Call the /create-item endpoint to insert the item into MongoDB
-    await create_item(item)
+        # Remove the temporary file when done
+        os.unlink(temp_file.name)
 
-    return {"filename": file.filename, "num_pages": num_pages}
+        global num_pages
+        contents = await temp_file.read()
+        byte_reader = PyPDF2.PdfReader(BytesIO(contents))
+        text_reader = PyPDF2.PdfReader(contents)
+
+        pdf_text = text_reader.pages[0]
+        pdf_actual_text = pdf_text.extract_text()
+        pdf_bytes = await write_new_pdf(temp_file)  # Await the coroutine here
+        num_pages = len(byte_reader.pages)
+
+        # call post with Item...
+        item = Item(
+            major_tag="HAII",
+              description="BYEEE",
+            likes=137,
+            pdf_file=pdf_bytes  
+        )
+
+        # Call the /create-item endpoint to insert the item into MongoDB
+        await create_item(item)
+
+        return {"filename": file.filename}
+
+    except Exception as e:
+        return {"error": str(e)}
 
 
 async def write_new_pdf(file):
@@ -103,13 +153,11 @@ async def get_all_items():
     collection = db["items"]
     items = await collection.find().to_list(length=None)
 
-    # If we only want to retrieve the pdf_files
-    # projection = {"pdf_file": 1}
-    # items = await collection.find({}, projection).to_list(length=None)
+    # Convert ObjectId to string
+    for item in items:
+        item["_id"] = str(item["_id"])
 
     return items
-
-
 
 @app.post("/create-item")
 async def create_item(item: Item):
