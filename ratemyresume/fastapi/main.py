@@ -5,7 +5,7 @@ import gridfs
 import pymongo 
 import motor 
 import bson
-from fastapi.responses import FileResponse
+from fastapi.responses import Response
 
 from pymongo import MongoClient
 from typing import Union, Optional
@@ -75,20 +75,17 @@ async def upload_file(file: UploadFile = File(...)):
     redacted_pdf_bytes  = edit_pdf(pdf_bytes, pii_words)
 
     # Return the redacted PDF bytes as a response
-    return FileResponse(redacted_pdf_bytes, media_type="application/pdf")
+    return Response(content=redacted_pdf_bytes, media_type='application/pdf')
 
 
 async def write_new_pdf(file):
-    db = MongoClient('mongodb://localhost:27017/').myDB
-    fs = gridfs.GridFS(db)
-
     # Ensure the file position is at the beginning
     file.file.seek(0)
 
-    # Read the file content and encode it to base64
-    encoded_string = base64.b64encode(file.file.read())
+    # Read the file content as bytes
+    pdf_bytes = file.file.read()
 
-    return encoded_string
+    return pdf_bytes
 
 
 @app.get("/get-all")

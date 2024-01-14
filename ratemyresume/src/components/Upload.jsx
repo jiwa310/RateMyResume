@@ -1,6 +1,9 @@
 import React from 'react';
+import { useRouter } from 'next/router';
 
 export default function WelcomePage() {
+  const router = useRouter();
+
   const handleFileChange = async (event) => {
     const file = event.target.files[0];
     const data = new FormData();

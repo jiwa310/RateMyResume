@@ -32,6 +32,9 @@ def get_pii_words(pdfText):
     return pii_words
 
 def edit_pdf(pdf_bytes, pii_words):
+    with open('output.pdf', 'wb') as f:
+        f.write(pdf_bytes)
+
     pdf_stream = fitz.open("pdf", pdf_bytes)  # Open the PDF from bytes
 
     for page_number in range(len(pdf_stream)):
