@@ -58,12 +58,11 @@ def edit_pdf(pdf_bytes, pii_words):
     return redacted_pdf_bytes
 
 
-# if __name__ == "__main__":
-#     text_reader = PyPDF2.PdfReader("example1.pdf")
-
-#     pdf_text = text_reader.pages[0]
-#     text = pdf_text.extract_text()
-#     pii_words = get_pii_words(text)
-#     # for word in pii_words:
-#     #     print(word)
-#     edit_pdf("example2.pdf", pii_words)
+if __name__ == "__main__":
+    text_reader = PyPDF2.PdfReader("example3.pdf")
+    pdf_text = text_reader.pages[0]
+    text = pdf_text.extract_text()
+    pii_words = get_pii_words(text)
+    # for word in pii_words:
+    #     print(word)
+    edit_pdf(bytes, pii_words)
