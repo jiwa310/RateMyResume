@@ -9,8 +9,8 @@ export default function Header() {
 
       <nav>
         <ul className="flex space-x-5 md:space-x-10">
-          <li><button className="text-cyan-400 hover:text-cyan-300 transition duration-200 hover:underline">Login</button></li>
-          <li><button className="text-cyan-400 hover:text-cyan-300 transition duration-200 hover:underline">Signup</button></li>
+          <li><button className="text-cyan-400 hover:text-cyan-300 transition duration-200 hover:underline">Explore Resumes</button></li>
+          <li><button className="text-cyan-400 hover:text-cyan-300 transition duration-200 hover:underline">Upload Resume</button></li>
         </ul>
       </nav>
     </header>
