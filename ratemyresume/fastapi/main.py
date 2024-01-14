@@ -28,10 +28,6 @@ database_name = os.getenv("NAME")
 app = FastAPI()
 
 class Item(BaseModel):
-    id: int
-    major_tag: str
-    description: str
-    likes: int
     pdf_file: bytes  # Add this field to accept bytes for the PDF
 
     
@@ -72,7 +68,9 @@ async def upload_file(file: UploadFile = File(...)):
     for word in pii_words:
         print(word)
 
-    redacted_pdf_bytes  = edit_pdf(pdf_bytes, pii_words)
+    with open('output.txt', 'w', encoding='utf-8') as file:
+        redacted_pdf_bytes = edit_pdf(pdf_bytes, pii_words)
+        file.write(f"REDACTED_PDF_BYTES {redacted_pdf_bytes}")
 
     # Return the redacted PDF bytes as a response
     return Response(content=redacted_pdf_bytes, media_type='application/pdf')
