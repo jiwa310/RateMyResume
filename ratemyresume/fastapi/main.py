@@ -5,6 +5,7 @@ import gridfs
 import pymongo 
 import motor 
 import bson
+from fastapi.responses import FileResponse
 
 from pymongo import MongoClient
 from typing import Union, Optional
@@ -67,25 +68,14 @@ async def upload_file(file: UploadFile = File(...)):
     pdf_bytes = await write_new_pdf(file)  # Await the coroutine here
     num_pages = len(text_reader.pages)
 
-    # call post with Item...
-    item = Item(
-        id=0,
-        major_tag="6:59 PM",
-        description="Coders!!",
-        likes=137,
-        pdf_file=pdf_bytes 
-    )
-
     pii_words = get_pii_words(pdf_text)
     for word in pii_words:
         print(word)
 
-    # edit_pdf(, pii_words)
+    redacted_pdf_bytes  = edit_pdf(pdf_bytes, pii_words)
 
-    # Call the /create-item endpoint to insert the item into MongoDB
-    result = await create_item(item)
-
-    return {"filename": file.filename, "num_pages": num_pages}
+    # Return the redacted PDF bytes as a response
+    return FileResponse(redacted_pdf_bytes, media_type="application/pdf")
 
 
 async def write_new_pdf(file):

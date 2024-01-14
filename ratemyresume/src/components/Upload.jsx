@@ -12,12 +12,20 @@ export default function WelcomePage() {
     });
 
     if (response.ok) {
-      const result = await response.json();
-      console.log(result);
+      const pdfBytes = await response.arrayBuffer();
+      const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+      const url = URL.createObjectURL(blob);
+
+      // Navigate to the PdfView page with the URL of the redacted PDF as a query parameter
+      router.push({
+        pathname: '/pdfPost',
+        query: { file: url },
+      });
     } else {
       console.error('Error:', response.statusText);
     }
   };
+
 
   return (
     <div className="min-h-screen text-center pt-10 md:pt-10 pl-10 md:pl-20 pr-10 md:pr-20">

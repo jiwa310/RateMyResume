@@ -31,11 +31,11 @@ def get_pii_words(pdfText):
 
     return pii_words
 
-def edit_pdf(pdf_path, pii_words):
-    pdf_document = fitz.open(pdf_path)
+def edit_pdf(pdf_bytes, pii_words):
+    pdf_stream = fitz.open("pdf", pdf_bytes)  # Open the PDF from bytes
 
-    for page_number in range(pdf_document.page_count):
-        page = pdf_document[page_number]
+    for page_number in range(len(pdf_stream)):
+        page = pdf_stream[page_number]
 
         # Iterate through PII words
         for pii_word in pii_words:
@@ -48,9 +48,11 @@ def edit_pdf(pdf_path, pii_words):
                 rc = page.add_redact_annot(rect, fill=(0,0,0))
                 page.apply_redactions()
 
-    pdf_document.save(f"anonymous_{pdf_path}")
-    #pdf_document.save()
-    pdf_document.close()
+    # Save the redacted PDF to a new bytes object
+    redacted_pdf_bytes = pdf_stream.write()
+    pdf_stream.close()
+
+    return redacted_pdf_bytes
 
 
 # if __name__ == "__main__":
