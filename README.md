@@ -1,5 +1,12 @@
-# SBHacksX 
+# SBHacksX Hackathon
 Jim Wang, Jason Wang, Vincent Cheong, Edwin Yee
+
+# Images of Web App
+![image](https://github.com/jiwa310/RateMyResume/assets/91923759/e09ecd9d-ded4-4526-971c-52e6d49bc02f)
+![image](https://github.com/jiwa310/RateMyResume/assets/91923759/e311b14a-56c9-42bb-8ddf-c7d332304300)
+![image](https://github.com/jiwa310/RateMyResume/assets/91923759/9704257e-ec3a-4306-8d35-d1a6b357642d)
+![image](https://github.com/jiwa310/RateMyResume/assets/91923759/e44fffde-58f4-4937-a00c-e01095604155)
+![image](https://github.com/jiwa310/RateMyResume/assets/91923759/241748ee-bfd3-465c-af8b-39bb85797370)
 
 # RateMyResume
 
@@ -7,7 +14,7 @@ Jim Wang, Jason Wang, Vincent Cheong, Edwin Yee
 In order to run this web application, follow these steps:
 1. Run "npm install" in ratemyresume folder
 2. Run "npm run dev" in ratemyresume folder
-3. Run "uvicorn main:app --reload" in the fastapi folder
+3. Run "uvicorn main:app --reload" in the fastapi folder (if the commands fails, try python -m uvicorn main:app --reload)
 
 # Inspiration
 As 2nd/3rd-year undergraduate college students, we wanted an online platform where we could gain inspiration from existing resumes and quickly receive resume critiques. However, individuals generally do not want to upload the sensitive information that's found on their resume to the internet due to privacy concerns. Thus, we thought of trying to create a project that automatically anonymizes our resume whenever a user uploads their resume to the site. In addition to anonymizing the resume, we also wanted to create a large database of resumes from real people (as opposed to the existing databases of templates and fake resumes) that users can view at any time to use for inspiration for their resumes. This will hopefully foster a large community that supports each other by giving career advice.
