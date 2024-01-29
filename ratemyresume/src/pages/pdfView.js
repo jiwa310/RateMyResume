@@ -1,7 +1,7 @@
 import PdfViewHeader from '../components/pdfViewHeader';
 import { Document, Page } from 'react-pdf';
 import { useRouter } from 'next/router';
-import DisqusThread from 'react-disqus-comments';
+// import DisqusThread from 'react-disqus-comments';
 
 export default function PdfView() {
     const router = useRouter();
@@ -16,14 +16,14 @@ export default function PdfView() {
         <Document file={file}>
             <Page pageNumber={1} renderTextLayer={false} renderAnnotationLayer={false}/>
         </Document>
-        <div style={{ width: '100%' }}>
+        {/* <div style={{ width: '100%' }}>
           <DisqusThread
               shortname="ratemyresume-com"
               identifier={url}
               title="PDF View"
               url={url}
           />
-        </div>
+        </div> */}
         </div>
     );
 }
