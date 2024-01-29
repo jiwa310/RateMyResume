@@ -13,8 +13,10 @@ Jim Wang, Jason Wang, Vincent Cheong, Edwin Yee
 # Steps to run web application
 In order to run this web application, follow these steps:
 1. Run "npm install" in ratemyresume folder
-2. Run "npm run dev" in ratemyresume folder
-3. Run "uvicorn main:app --reload" in the fastapi folder (if the commands fails, try python -m uvicorn main:app --reload)
+2. If an error occurs for react-disqus-comments@1.4.0, then run npm install --legacy-peer-deps react-disqus-comments
+3. Run "npm run dev" in ratemyresume folder
+4. Run "uvicorn main:app --reload" in the fastapi folder (if the commands fails, try python -m uvicorn main:app --reload)
+5. If an error occurs when running the uvicorn command, make sure the .env is in the correct ratemyresume directory and contains the correct secret credentials
 
 # Inspiration
 As 2nd/3rd-year undergraduate college students, we wanted an online platform where we could gain inspiration from existing resumes and quickly receive resume critiques. However, individuals generally do not want to upload the sensitive information that's found on their resume to the internet due to privacy concerns. Thus, we thought of trying to create a project that automatically anonymizes our resume whenever a user uploads their resume to the site. In addition to anonymizing the resume, we also wanted to create a large database of resumes from real people (as opposed to the existing databases of templates and fake resumes) that users can view at any time to use for inspiration for their resumes. This will hopefully foster a large community that supports each other by giving career advice.
