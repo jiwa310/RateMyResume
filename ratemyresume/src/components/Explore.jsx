@@ -6,12 +6,10 @@ import axios from 'axios';
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
 export default function Explore() {
-  const [hoverIndex, setHoverIndex] = useState(null);
   const [resumes, setResumes] = useState([]);
 
   useEffect(() => {
     axios.get('http://127.0.0.1:8000/get-all').then((res) => {
-      // console.log(res);
       if (res.data) {
         console.log("Resumes Data:", res.data)
         setResumes(res.data)
@@ -21,42 +19,44 @@ export default function Explore() {
     });
   }, []);
 
-  const handleRowHover = (index) => {
-    setHoverIndex(index);
-  };
-
   return (
     <div className="min-h-screen p-10">
       <h1 className="text-cyan-300 text-center text-3xl md:text-5xl font-bold mb-4">
         Find Your Inspiration.
       </h1>
 
-      <table className="w-full border-collapse border border-gray-200">
-        <thead>
-          <tr>
-            <th className="border p-2">ID</th>
-            <th className="border p-2">Description</th>
-            <th className="border p-2">Likes</th>
-            <th className="border p-2">Major Tag</th>
-            {/* Add other columns as needed */}
-          </tr>
-        </thead>
-        <tbody>
-          {resumes?.map((item, index) => (
-            <tr
-              key={index}
-              className={hoverIndex === index ? 'bg-cyan-200' : ''}
-              onMouseEnter={() => handleRowHover(index)}
-              onMouseLeave={() => handleRowHover(null)}
-            >
-              <td className="border p-2">{item._id}</td>
-              <td className="border p-2">{item.description}</td>
-              <td className="border p-2">{item.likes}</td>
-              <td className="border p-2">{item.major_tag}</td>
+      <div className="overflow-x-auto">
+        <table className="w-full border-collapse border border-gray-200">
+          <thead>
+            <tr>
+              <th className="border p-2">ID</th>
+              <th className="border p-2">Description</th>
+              <th className="border p-2">Likes</th>
+              <th className="border p-2">Major Tag</th>
+              <th className="border p-2">PDF File</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {resumes?.map((item, index) => (
+              <tr>
+                <td className="border p-2">{item._id}</td>
+                <td className="border p-2">{item.description}</td>
+                <td className="border p-2">{item.likes}</td>
+                <td className="border p-2">{item.major_tag}</td>
+
+                <td className="border p-2" style={{ padding: 0, margin: 0 }}>
+                <Document
+                  file={{ data: atob(item.pdf_file) }}
+                  onLoadSuccess={(pdfInfo) => console.log('PDF loaded', pdfInfo)}
+                >
+                  <Page pageNumber={1} renderTextLayer={false} renderAnnotationLayer={false} />
+                </Document>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
